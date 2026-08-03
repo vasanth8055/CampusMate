@@ -1,0 +1,178 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      routes:
+
+        # ==========================
+        # User Service
+        # ==========================
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/v1/users/**,/api/v1/auth/**,/api/v1/colleges/**,/api/v1/drivers/**,/api/v1/internal/drivers/**
+
+        - id: user-service-docs
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+
+        # ==========================
+        # Trip Service
+        # ==========================
+        - id: trip-service
+          uri: lb://TRIP-SERVICE
+          predicates:
+            - Path=/api/v1/trips/**,/internal/v1/trips/**
+
+        - id: trip-service-docs
+          uri: lb://TRIP-SERVICE
+          predicates:
+            - Path=/trip-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+
+        # ==========================
+        # Matching Service
+        # ==========================
+        - id: matching-service
+          uri: lb://MATCHING-SERVICE
+          predicates:
+            - Path=/api/v1/matches/**
+
+        - id: matching-service-docs
+          uri: lb://MATCHING-SERVICE
+          predicates:
+            - Path=/matching-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+
+        # ==========================
+        # Booking Service
+        # ==========================
+        - id: booking-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/v1/bookings/**
+
+        - id: booking-service-docs
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/booking-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+
+        # ==========================
+        # Payment Service
+        # ==========================
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/api/v1/payments/**
+
+        - id: payment-service-docs
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+
+        # ==========================
+        # Notification Service
+        # ==========================
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/api/v1/notifications/**
+
+        - id: notification-service-docs
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/notification-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+
+        # ==========================
+        # Ride Tracking Service
+        # ==========================
+        - id: ride-tracking-service
+          uri: lb://RIDE-TRACKING-SERVICE
+          predicates:
+            - Path=/api/v1/tracking/**
+
+        - id: ride-tracking-service-docs
+          uri: lb://RIDE-TRACKING-SERVICE
+          predicates:
+            - Path=/ride-tracking-service/v3/api-docs
+          filters:
+            - StripPrefix=1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    instance-id: localhost:${server.port}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+  endpoint:
+    health:
+      show-details: always
+
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+jwt:
+  secret: c2VjdXJlLWJhc2U2NC1lbmNvZGVkLWtleS1mb3ItcmlkZWxvb3AtMjU2LWJpdHMtMTIzNDU2Nzg5MA==
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+    urls:
+      - name: User Service
+        url: /user-service/v3/api-docs
+
+      - name: Trip Service
+        url: /trip-service/v3/api-docs
+
+      - name: Matching Service
+        url: /matching-service/v3/api-docs
+
+      - name: Booking Service
+        url: /booking-service/v3/api-docs
+
+      - name: Payment Service
+        url: /payment-service/v3/api-docs
+
+      - name: Notification Service
+        url: /notification-service/v3/api-docs
+
+      - name: Ride Tracking Service
+        url: /ride-tracking-service/v3/api-docs
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: TRACE

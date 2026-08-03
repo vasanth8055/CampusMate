@@ -1,0 +1,69 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+
+  - job_name: "prometheus"
+    static_configs:
+      - targets:
+          - "prometheus:9090"
+
+  - job_name: "api-gateway"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets:
+          - "api-gateway:8080"
+
+  - job_name: "eureka-server"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets:
+          - "eureka-server:8761"
+
+  - job_name: "user-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets:
+          - "user-service:8081"
+
+  - job_name: "trip-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets:
+          - "trip-service:8082"
+
+  - job_name: "booking-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets:
+          - "booking-service:8083"
+
+  - job_name: "matching-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets:
+          - "matching-service:8084"
+
+  - job_name: "payment-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets:
+          - "payment-service:8085"
+
+  - job_name: "notification-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets:
+          - "notification-service:8086"
+
+  - job_name: "ride-tracking-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets:
+          - "ride-tracking-service:8087"
+
+  - job_name: "admin-service"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets:
+          - "admin-service:8089"
