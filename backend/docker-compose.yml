@@ -205,6 +205,14 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
 
+      DB_URL: jdbc:postgresql://postgres:5432/users_db?options=-c%20TimeZone=Asia/Kolkata
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: public
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+
       MAIL_HOST: ${MAIL_HOST}
       MAIL_PORT: ${MAIL_PORT}
       MAIL_USERNAME: ${MAIL_USERNAME}
@@ -239,6 +247,12 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
 
+      DB_URL: jdbc:postgresql://postgres:5432/trips_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: public
+
+      JWT_SECRET: ${JWT_SECRET}
 
   booking-service:
     build:
@@ -268,6 +282,13 @@ services:
 
     environment:
       SPRING_PROFILES_ACTIVE: docker
+
+      DB_URL: jdbc:postgresql://postgres:5432/bookings_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: public
+
+      JWT_SECRET: ${JWT_SECRET}
 
   matching-service:
     build:
@@ -322,6 +343,13 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
 
+      DB_URL: jdbc:postgresql://postgres:5432/payments_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: public
+
+      JWT_SECRET: ${JWT_SECRET}
+
   notification-service:
     build:
       context: ./notification-service
@@ -349,6 +377,13 @@ services:
 
     environment:
       SPRING_PROFILES_ACTIVE: docker
+
+      DB_URL: jdbc:postgresql://postgres:5432/notifications_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: public
+
+      JWT_SECRET: ${JWT_SECRET}
 
   ride-tracking-service:
     build:
@@ -380,6 +415,13 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
 
+      DB_URL: jdbc:postgresql://postgres:5432/tracking_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: public
+
+      JWT_SECRET: ${JWT_SECRET}
+
   admin-service:
     build:
       context: .
@@ -408,6 +450,15 @@ services:
       SPRING_PROFILES_ACTIVE: docker
       EUREKA_INSTANCE_HOSTNAME: rideloop-admin-service
       USER_SERVICE_URL: http://user-service:8081
+
+      DB_URL: jdbc:postgresql://postgres:5432/admin_db?options=-c%20TimeZone=Asia/Kolkata
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SCHEMA: public
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+
       ADMIN_EMAIL: ${ADMIN_EMAIL:-campusmate.teamofficial@gmail.com}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Password@123}
       ADMIN_FIRST_NAME: ${ADMIN_FIRST_NAME:-Vasanth}
