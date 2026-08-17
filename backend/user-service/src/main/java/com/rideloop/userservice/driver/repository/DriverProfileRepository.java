@@ -14,6 +14,8 @@ public interface DriverProfileRepository
 
     Optional<DriverProfile> findByUser(User user);
 
+    Optional<DriverProfile> findByUser_Id(UUID userId);
+
     boolean existsByUser(User user);
 
     List<DriverProfile> findByStatus(DriverStatus status);

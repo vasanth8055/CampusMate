@@ -520,8 +520,61 @@ public class BookingServiceImpl implements BookingService {
     }
 
     // =========================================================
+    // TRIP EVENT LIFECYCLE HANDLERS
+    // =========================================================
+
+    @Override
+    @Transactional
+    public void handleTripStarted(UUID tripId) {
+        List<Booking> activeBookings = bookingRepository.findAllByTripIdAndStatusInOrderByCreatedAtDesc(
+                tripId,
+                List.of(BookingStatus.CONFIRMED, BookingStatus.ACCEPTED)
+        );
+
+        for (Booking booking : activeBookings) {
+            booking.setStatus(BookingStatus.ONGOING);
+            booking.setStartedAt(LocalDateTime.now());
+            Booking saved = bookingRepository.saveAndFlush(booking);
+            dispatchEvent(saved, BookingEventType.BOOKING_STARTED);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void handleTripCompleted(UUID tripId) {
+        List<Booking> ongoingBookings = bookingRepository.findAllByTripIdAndStatusInOrderByCreatedAtDesc(
+                tripId,
+                List.of(BookingStatus.ONGOING, BookingStatus.CONFIRMED, BookingStatus.ACCEPTED)
+        );
+
+        for (Booking booking : ongoingBookings) {
+            booking.setStatus(BookingStatus.COMPLETED);
+            booking.setCompletedAt(LocalDateTime.now());
+            Booking saved = bookingRepository.saveAndFlush(booking);
+            dispatchEvent(saved, BookingEventType.BOOKING_COMPLETED);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void handleTripCancelled(UUID tripId, String reason) {
+        List<Booking> activeBookings = bookingRepository.findAllByTripIdAndStatusInOrderByCreatedAtDesc(
+                tripId,
+                List.of(BookingStatus.REQUESTED, BookingStatus.ACCEPTED, BookingStatus.CONFIRMED, BookingStatus.ONGOING)
+        );
+
+        for (Booking booking : activeBookings) {
+            booking.setStatus(BookingStatus.CANCELLED);
+            booking.setCancelledAt(LocalDateTime.now());
+            Booking saved = bookingRepository.saveAndFlush(booking);
+            dispatchEvent(saved, BookingEventType.BOOKING_CANCELLED);
+        }
+    }
+
+    // =========================================================
     // PRIVATE HELPERS
     // =========================================================
+
 
     private Booking findBooking(UUID bookingId) {
 
@@ -564,5 +617,22 @@ public class BookingServiceImpl implements BookingService {
                         eventType
                 )
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BookingResponse> getAllBookingsAdmin() {
+        return bookingRepository.findAll()
+                .stream()
+                .map(bookingMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BookingResponse getBookingAdmin(UUID bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found: " + bookingId));
+        return bookingMapper.toResponse(booking);
     }
 }

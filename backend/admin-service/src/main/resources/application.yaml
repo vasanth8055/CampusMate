@@ -25,10 +25,7 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
 
   instance:
-    hostname: localhost
     prefer-ip-address: true
-    ip-address: 127.0.0.1
-    instance-id: localhost:${server.port}
 
 management:
   endpoints:
@@ -52,3 +49,15 @@ jwt:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+user:
+  service:
+    url: ${USER_SERVICE_URL:http://user-service:8081}
+
+trip:
+  service:
+    url: ${TRIP_SERVICE_URL:http://trip-service:8082}
+
+booking:
+  service:
+    url: ${BOOKING_SERVICE_URL:http://booking-service:8083}

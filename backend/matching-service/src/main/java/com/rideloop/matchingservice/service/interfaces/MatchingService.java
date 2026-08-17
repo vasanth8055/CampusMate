@@ -10,4 +10,9 @@ public interface MatchingService {
     List<MatchResponse> findMatches(
             MatchRequest request
     );
+
+    List<MatchResponse> findMatches(
+            MatchRequest request,
+            java.util.UUID excludeDriverId
+    );
 }

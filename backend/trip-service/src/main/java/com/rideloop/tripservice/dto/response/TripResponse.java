@@ -14,7 +14,15 @@ public record TripResponse(
 
         String source,
 
+        Double sourceLatitude,
+
+        Double sourceLongitude,
+
         String destination,
+
+        Double destinationLatitude,
+
+        Double destinationLongitude,
 
         LocalDateTime departureTime,
 
@@ -28,7 +36,11 @@ public record TripResponse(
 
         LocalDateTime createdAt,
 
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+
+        DriverInfoResponse driver,
+
+        VehicleResponse vehicle
 
 ) {
 }

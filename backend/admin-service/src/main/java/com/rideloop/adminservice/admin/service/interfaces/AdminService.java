@@ -18,6 +18,8 @@ public interface AdminService {
 
     void rejectDriver(UUID driverId);
 
+    void rejectDriver(UUID driverId, String reason);
+
     // User
 
     List<UserResponse> getUsers();

@@ -67,4 +67,19 @@ public class InternalUserController {
                 )
         );
     }
+
+    @PostMapping("/{userId}/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(
+            @PathVariable UUID userId,
+            @RequestParam(name = "newPassword", required = false) String newPassword) {
+
+        userService.adminResetPassword(userId, newPassword);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Password reset successfully.",
+                        null
+                )
+        );
+    }
 }

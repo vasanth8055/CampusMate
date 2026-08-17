@@ -13,16 +13,26 @@ public interface DriverService {
             String userEmail,
             BecomeDriverRequest request
     );
+    DriverResponse getMyDriver(String userEmail);
     void uploadLicense(
             String userEmail,
             MultipartFile file
     );
     List<DriverResponse> getPendingDrivers();
 
+    List<DriverResponse> getAllDrivers(com.rideloop.userservice.driver.entity.enums.DriverStatus status);
+
     DriverResponse getDriver(UUID driverId);
 
     void approveDriver(UUID driverId);
 
     void rejectDriver(UUID driverId);
+
+    void rejectDriver(UUID driverId, String reason);
+
+    void suspendDriver(UUID driverId, String reason);
+
+    void restoreDriver(UUID driverId);
+
     boolean isDriverApproved(UUID driverId);
 }

@@ -16,6 +16,12 @@ public class DriverServiceImpl implements DriverService {
 
     private final UserServiceClient userServiceClient;
     private final AuditLogger auditLogger;
+
+    @Override
+    public List<DriverResponse> getAllDrivers(String status) {
+        return userServiceClient.getAllDrivers(status).getData();
+    }
+
     @Override
     public List<DriverResponse> getPendingDrivers() {
         return userServiceClient.getPendingDrivers().getData();
@@ -34,7 +40,24 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public void rejectDriver(UUID driverId) {
-        userServiceClient.rejectDriver(driverId);
-        auditLogger.log("Rejected driver: " + driverId);
+        rejectDriver(driverId, null);
+    }
+
+    @Override
+    public void rejectDriver(UUID driverId, String reason) {
+        userServiceClient.rejectDriver(driverId, reason);
+        auditLogger.log("Rejected driver: " + driverId + " reason: " + reason);
+    }
+
+    @Override
+    public void suspendDriver(UUID driverId, String reason) {
+        userServiceClient.suspendDriver(driverId, reason);
+        auditLogger.log("Suspended driver: " + driverId + " reason: " + reason);
+    }
+
+    @Override
+    public void restoreDriver(UUID driverId) {
+        userServiceClient.restoreDriver(driverId);
+        auditLogger.log("Restored driver: " + driverId);
     }
 }

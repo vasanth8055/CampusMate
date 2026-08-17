@@ -1,26 +1,35 @@
-# IntelliJ
+# IDE
 .idea/
+.vscode/
+
+# Java / Maven
+**/target/
+**/bin/
+*.class
+
+# Build artifacts
+**/BOOT-INF/
+**/META-INF/
+# IntelliJ
 *.iml
 
-# Maven
-**/target/
-
+# Uploaded/generated runtime files
+uploads/
 # Node
-node_modules/
+**/node_modules/
+frontend/dist/
 
-# Build
-dist/
-build/
+# Environment / secrets
+.env
+.env.*
+!.env.example
 
 # Logs
 *.log
 
-# Environment
-.env
-.env.*
-
-# Uploads
-uploads/
+# Temporary files
+scratch/
+backend-source-only/
 
 # OS
 .DS_Store

@@ -25,8 +25,16 @@ public  class UserResponse {
 
         private boolean collegeVerified;
 
+        private String collegeName;
+
+        private String collegeEmail;
+
         private String role;
 
         private String status;
+
+        private java.time.LocalDateTime createdAt;
+
+        private java.time.LocalDateTime updatedAt;
     }
 

@@ -35,6 +35,8 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
 
 management:
   endpoints:
@@ -59,3 +61,7 @@ springdoc:
 
 jwt:
   secret: c2VjdXJlLWJhc2U2NC1lbmNvZGVkLWtleS1mb3ItcmlkZWxvb3AtMjU2LWJpdHMtMTIzNDU2Nzg5MA==
+
+trip:
+  service:
+    url: ${TRIP_SERVICE_URL:http://localhost:8082}

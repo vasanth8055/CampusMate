@@ -12,7 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping({"/api/v1/admin/auth", "/api/v1/auth", "/api/v1/admin"})
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -30,7 +30,7 @@ public class AuthController {
         );
     }
 
-    @GetMapping("/profile")
+    @GetMapping({"/profile", "/me", "/current-admin"})
     public ResponseEntity<ApiResponse<AuthResponse>> profile(
             Authentication authentication) {
 

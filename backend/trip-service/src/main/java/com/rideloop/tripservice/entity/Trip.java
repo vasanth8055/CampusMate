@@ -38,22 +38,33 @@ public class Trip {
     private UUID driverId;
 
     @NotBlank
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 255)
     private String source;
 
+    @Column(name = "source_latitude")
+    private Double sourceLatitude;
+
+    @Column(name = "source_longitude")
+    private Double sourceLongitude;
+
     @NotBlank
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 255)
     private String destination;
 
+    @Column(name = "destination_latitude")
+    private Double destinationLatitude;
+
+    @Column(name = "destination_longitude")
+    private Double destinationLongitude;
+
     @NotNull
-    @Future
     @Column(name = "departure_time", nullable = false)
     private LocalDateTime departureTime;
 
     @Column(name = "arrival_time")
     private LocalDateTime arrivalTime;
 
-    @Min(1)
+    @Min(0)
     @Column(name = "available_seats", nullable = false)
     private Integer availableSeats;
 

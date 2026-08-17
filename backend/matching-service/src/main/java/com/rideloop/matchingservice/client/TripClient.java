@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@FeignClient(name = "trip-service")
+@FeignClient(name = "trip-service", url = "${trip.service.url:http://localhost:8082}")
 public interface TripClient {
+
 
     @GetMapping("/internal/v1/trips/search")
     ApiResponse<List<TripResponse>> searchAvailableTrips(
 
-            @RequestParam("source")
+            @RequestParam(value = "source", required = false)
             String source,
 
             @RequestParam("destination")

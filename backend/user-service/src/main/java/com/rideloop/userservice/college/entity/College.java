@@ -46,6 +46,24 @@ public class College {
     )
     private String emailDomain;
 
+    @Column(length = 255)
+    private String address;
+
+    @Column(length = 100)
+    private String city;
+
+    @Column(length = 100)
+    private String state;
+
+    @Column(length = 100)
+    private String country;
+
+    @Column
+    private Double latitude;
+
+    @Column
+    private Double longitude;
+
     @Column(nullable = false)
     @Builder.Default
     private boolean active = true;

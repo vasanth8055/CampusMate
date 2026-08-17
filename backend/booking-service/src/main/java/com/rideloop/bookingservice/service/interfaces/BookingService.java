@@ -60,4 +60,21 @@ public interface BookingService {
             UUID bookingId,
             UUID driverId
     );
-}
+
+    void handleTripStarted(
+            UUID tripId
+    );
+
+    void handleTripCompleted(
+            UUID tripId
+    );
+
+    void handleTripCancelled(
+            UUID tripId,
+            String reason
+    );
+
+    List<BookingResponse> getAllBookingsAdmin();
+
+    BookingResponse getBookingAdmin(UUID bookingId);
+}

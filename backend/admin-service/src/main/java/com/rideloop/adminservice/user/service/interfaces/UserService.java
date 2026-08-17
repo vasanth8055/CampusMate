@@ -14,4 +14,6 @@ public interface UserService {
     void blockUser(UUID userId);
 
     void unblockUser(UUID userId);
+
+    void resetPassword(UUID userId, String newPassword);
 }

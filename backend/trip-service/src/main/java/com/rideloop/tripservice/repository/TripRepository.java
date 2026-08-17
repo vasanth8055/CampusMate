@@ -27,6 +27,12 @@ public interface TripRepository extends JpaRepository<Trip, UUID> {
 
     List<Trip> findByDriverId(UUID driverId);
 
+    List<Trip> findByDriverIdOrderByDepartureTimeDesc(UUID driverId);
+
+    List<Trip> findByDriverIdOrderByDepartureTimeDescCreatedAtDesc(UUID driverId);
+
+
+
     List<Trip> findByStatus(TripStatus status);
 
     List<Trip> findBySourceIgnoreCaseAndDestinationIgnoreCase(
@@ -47,8 +53,38 @@ public interface TripRepository extends JpaRepository<Trip, UUID> {
     @Query("""
             SELECT t
             FROM Trip t
-            WHERE LOWER(t.source) = LOWER(:source)
-              AND LOWER(t.destination) = LOWER(:destination)
+            WHERE (
+                LOWER(TRIM(t.destination)) = LOWER(TRIM(:destination))
+                OR LOWER(TRIM(t.destination)) LIKE LOWER(CONCAT('%', TRIM(:destination), '%'))
+                OR LOWER(TRIM(:destination)) LIKE LOWER(CONCAT('%', TRIM(t.destination), '%'))
+            )
+              AND t.status = :status
+              AND t.availableSeats >= :requiredSeats
+              AND t.departureTime BETWEEN :from AND :to
+            ORDER BY t.departureTime ASC
+            """)
+    List<Trip> searchAvailableTripsByDestination(
+            @Param("destination") String destination,
+            @Param("status") TripStatus status,
+            @Param("requiredSeats") Integer requiredSeats,
+            @Param("from") LocalDateTime from,
+            @Param("to") LocalDateTime to
+    );
+
+    @Query("""
+            SELECT t
+            FROM Trip t
+            WHERE (
+                LOWER(TRIM(t.destination)) = LOWER(TRIM(:destination))
+                OR LOWER(TRIM(t.destination)) LIKE LOWER(CONCAT('%', TRIM(:destination), '%'))
+                OR LOWER(TRIM(:destination)) LIKE LOWER(CONCAT('%', TRIM(t.destination), '%'))
+            )
+              AND (
+                :source IS NULL 
+                OR TRIM(:source) = '' 
+                OR LOWER(TRIM(t.source)) LIKE LOWER(CONCAT('%', TRIM(:source), '%'))
+                OR LOWER(TRIM(:source)) LIKE LOWER(CONCAT('%', TRIM(t.source), '%'))
+              )
               AND t.status = :status
               AND t.availableSeats >= :requiredSeats
               AND t.departureTime BETWEEN :from AND :to

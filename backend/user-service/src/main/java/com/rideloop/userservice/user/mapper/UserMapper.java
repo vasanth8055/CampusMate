@@ -30,6 +30,12 @@ public class UserMapper {
                 .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole())
                 .status(user.getStatus())
+                .homeAddress(user.getHomeAddress())
+                .homeLatitude(user.getHomeLatitude())
+                .homeLongitude(user.getHomeLongitude())
+                .emailVerified(user.isEmailVerified())
+                .collegeEmail(user.getCollegeEmail())
+                .collegeVerified(user.isCollegeVerified())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .build();

@@ -10,5 +10,7 @@ public enum DriverStatus {
 
     APPROVED,
 
-    REJECTED
+    REJECTED,
+
+    SUSPENDED
 }

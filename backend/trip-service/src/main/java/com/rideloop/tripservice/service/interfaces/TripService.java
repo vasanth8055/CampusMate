@@ -33,6 +33,16 @@ public interface TripService {
             LocalDateTime to,
             Integer requiredSeats
     );
+
+    List<TripResponse> searchTrips(
+            String source,
+            String destination,
+            LocalDateTime from,
+            LocalDateTime to,
+            Integer requiredSeats,
+            UUID excludeDriverId
+    );
+
     TripTrackingInfoResponse getTrackingInfo(
             UUID tripId
     );

@@ -40,10 +40,10 @@ spring:
         format_sql: true
 
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: imvasanth390@gmail.com
-    password:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
 
     properties:
       mail:
@@ -57,6 +57,9 @@ eureka:
     service-url:
       defaultZone: http://eureka-server:8761/eureka/
 
+  instance:
+    prefer-ip-address: true
+
 management:
   endpoints:
     web:
@@ -66,6 +69,10 @@ management:
   endpoint:
     health:
       show-details: always
+      enabled: true
+  health:
+    mail:
+      enabled: false
 
   prometheus:
     metrics:

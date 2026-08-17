@@ -29,6 +29,71 @@ public class TripInternalController {
 
     private final TripInventoryService tripInventoryService;
     private final TripService tripService;
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<TripResponse>>> getAllTrips(
+            @RequestParam(required = false) com.rideloop.tripservice.enums.TripStatus status,
+            @RequestParam(required = false) UUID driverId) {
+
+        List<TripResponse> trips = tripService.getAllTrips();
+        if (status != null) {
+            trips = trips.stream().filter(t -> t.status() == status).toList();
+        }
+        if (driverId != null) {
+            trips = trips.stream().filter(t -> t.driverId().equals(driverId)).toList();
+        }
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Trips fetched successfully",
+                        trips
+                )
+        );
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<ApiResponse<List<TripResponse>>> getActiveTrips() {
+        List<TripResponse> trips = tripService.getAllTrips().stream()
+                .filter(t -> t.status() == com.rideloop.tripservice.enums.TripStatus.IN_PROGRESS ||
+                             t.status() == com.rideloop.tripservice.enums.TripStatus.SCHEDULED)
+                .toList();
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Active trips fetched successfully",
+                        trips
+                )
+        );
+    }
+
+    @GetMapping("/{tripId}/details")
+    public ResponseEntity<ApiResponse<TripResponse>> getTripDetails(
+            @PathVariable UUID tripId) {
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Trip details fetched successfully",
+                        tripService.getTripById(tripId)
+                )
+        );
+    }
+
+    @PatchMapping("/{tripId}/cancel")
+    public ResponseEntity<ApiResponse<TripResponse>> cancelTrip(
+            @PathVariable UUID tripId,
+            @RequestParam(required = false) UUID driverId) {
+
+        TripResponse trip = tripService.getTripById(tripId);
+        UUID targetDriverId = driverId != null ? driverId : trip.driverId();
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Trip cancelled successfully",
+                        tripService.cancelTrip(tripId, targetDriverId)
+                )
+        );
+    }
+
     @GetMapping("/{tripId}")
     public ResponseEntity<ApiResponse<TripBookingInfoResponse>>
     getBookingInfo(
@@ -79,7 +144,7 @@ public class TripInternalController {
     }
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<TripResponse>>> searchAvailableTrips(
-            @RequestParam String source,
+            @RequestParam(required = false) String source,
             @RequestParam String destination,
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

@@ -53,8 +53,9 @@ public class TripController {
     )
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<TripResponse>>> searchTrips(
+            @AuthenticationPrincipal AuthenticatedUser user,
 
-            @RequestParam String source,
+            @RequestParam(required = false) String source,
 
             @RequestParam String destination,
 
@@ -72,13 +73,16 @@ public class TripController {
 
             @RequestParam Integer seats) {
 
+        UUID excludeDriverId = user != null ? user.getUserId() : null;
+
         List<TripResponse> response =
                 tripService.searchTrips(
                         source,
                         destination,
                         from,
                         to,
-                        seats
+                        seats,
+                        excludeDriverId
                 );
 
         return ResponseEntity.ok(
@@ -88,6 +92,7 @@ public class TripController {
                 )
         );
     }
+
     @Operation(
             summary = "Get trip by ID",
             description = "Returns trip details for the specified trip ID."
@@ -127,7 +132,7 @@ public class TripController {
             summary = "Get my trips",
             description = "Returns all trips created by the authenticated driver."
     )
-    @GetMapping("/me")
+    @GetMapping({"/me", "/driver"})
     public ResponseEntity<ApiResponse<List<TripResponse>>> getMyTrips(
             @AuthenticationPrincipal AuthenticatedUser user) {
 
@@ -188,7 +193,7 @@ public class TripController {
                 )
         );
     }
-    @PostMapping("/{tripId}/start")
+    @RequestMapping(value = "/{tripId}/start", method = {RequestMethod.POST, RequestMethod.PUT})
     public ResponseEntity<ApiResponse<TripResponse>> startTrip(
             @PathVariable UUID tripId,
             @AuthenticationPrincipal AuthenticatedUser user) {
@@ -204,7 +209,7 @@ public class TripController {
         );
     }
 
-    @PostMapping("/{tripId}/complete")
+    @RequestMapping(value = "/{tripId}/complete", method = {RequestMethod.POST, RequestMethod.PUT})
     public ResponseEntity<ApiResponse<TripResponse>> completeTrip(
             @PathVariable UUID tripId,
             @AuthenticationPrincipal AuthenticatedUser user) {
@@ -220,7 +225,7 @@ public class TripController {
         );
     }
 
-    @PostMapping("/{tripId}/cancel")
+    @RequestMapping(value = "/{tripId}/cancel", method = {RequestMethod.POST, RequestMethod.PUT})
     public ResponseEntity<ApiResponse<TripResponse>> cancelTrip(
             @PathVariable UUID tripId,
             @AuthenticationPrincipal AuthenticatedUser user) {

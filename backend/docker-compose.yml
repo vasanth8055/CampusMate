@@ -171,10 +171,13 @@ services:
 
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      EUREKA_INSTANCE_HOSTNAME: rideloop-api-gateway
+
 
   user-service:
     build:
-      context: ./user-service
+      context: .
+      dockerfile: ./user-service/Dockerfile
 
     container_name: rideloop-user-service
     restart: unless-stopped
@@ -202,9 +205,15 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
 
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+
   trip-service:
     build:
-      context: ./trip-service
+      context: .
+      dockerfile: ./trip-service/Dockerfile
 
     container_name: rideloop-trip-service
     restart: unless-stopped
@@ -233,7 +242,8 @@ services:
 
   booking-service:
     build:
-      context: ./booking-service
+      context: .
+      dockerfile: booking-service/Dockerfile
 
     container_name: rideloop-booking-service
     restart: unless-stopped
@@ -261,7 +271,8 @@ services:
 
   matching-service:
     build:
-      context: ./matching-service
+      context: .
+      dockerfile: ./matching-service/Dockerfile
 
     container_name: rideloop-matching-service
     restart: unless-stopped
@@ -371,7 +382,8 @@ services:
 
   admin-service:
     build:
-      context: ./admin-service
+      context: .
+      dockerfile: ./admin-service/Dockerfile
 
     container_name: rideloop-admin-service
     restart: unless-stopped
@@ -394,6 +406,12 @@ services:
 
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      EUREKA_INSTANCE_HOSTNAME: rideloop-admin-service
+      USER_SERVICE_URL: http://user-service:8081
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-campusmate.teamofficial@gmail.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Password@123}
+      ADMIN_FIRST_NAME: ${ADMIN_FIRST_NAME:-Vasanth}
+      ADMIN_LAST_NAME: ${ADMIN_LAST_NAME:-}
 
 volumes:
   postgres-data:

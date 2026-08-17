@@ -28,6 +28,18 @@ public class UserResponse {
 
     private UserStatus status;
 
+    private String homeAddress;
+
+    private Double homeLatitude;
+
+    private Double homeLongitude;
+
+    private boolean emailVerified;
+
+    private String collegeEmail;
+
+    private boolean collegeVerified;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -103,14 +103,18 @@ public class CollegeServiceImpl
                 otp
         );
 
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "User not found."
-                        )
-                );
+        User user;
+        try {
+            UUID id = UUID.fromString(userEmail.trim());
+            user = userRepository.findById(id)
+                    .or(() -> userRepository.findByEmail(userEmail.trim()))
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userEmail));
+        } catch (IllegalArgumentException e) {
+            user = userRepository.findByEmail(userEmail.trim())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userEmail));
+        }
 
-        user.setCollegeEmail(collegeEmail);
+        user.setCollegeEmail(collegeEmail.trim());
         user.setCollegeVerified(true);
 
         userRepository.save(user);

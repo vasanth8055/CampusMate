@@ -115,7 +115,7 @@ public class BookingController {
         );
     }
 
-    @PutMapping("/{bookingId}/accept")
+    @RequestMapping(value = "/{bookingId}/accept", method = {RequestMethod.PUT, RequestMethod.POST})
     public ResponseEntity<ApiResponse<BookingResponse>>
     acceptBooking(
             @PathVariable UUID bookingId,
@@ -132,7 +132,7 @@ public class BookingController {
         );
     }
 
-    @PutMapping("/{bookingId}/reject")
+    @RequestMapping(value = "/{bookingId}/reject", method = {RequestMethod.PUT, RequestMethod.POST})
     public ResponseEntity<ApiResponse<BookingResponse>>
     rejectBooking(
             @PathVariable UUID bookingId,
@@ -149,7 +149,7 @@ public class BookingController {
         );
     }
 
-    @PutMapping("/{bookingId}/cancel")
+    @RequestMapping(value = "/{bookingId}/cancel", method = {RequestMethod.PUT, RequestMethod.POST})
     public ResponseEntity<ApiResponse<BookingResponse>>
     cancelBooking(
             @PathVariable UUID bookingId,
@@ -166,7 +166,7 @@ public class BookingController {
         );
     }
 
-    @PutMapping("/{bookingId}/confirm")
+    @RequestMapping(value = "/{bookingId}/confirm", method = {RequestMethod.PUT, RequestMethod.POST})
     public ResponseEntity<ApiResponse<BookingResponse>>
     confirmBooking(
             @PathVariable UUID bookingId,
@@ -183,7 +183,7 @@ public class BookingController {
         );
     }
 
-    @PutMapping("/{bookingId}/start")
+    @RequestMapping(value = "/{bookingId}/start", method = {RequestMethod.PUT, RequestMethod.POST})
     public ResponseEntity<ApiResponse<BookingResponse>>
     startBooking(
             @PathVariable UUID bookingId,
@@ -200,7 +200,7 @@ public class BookingController {
         );
     }
 
-    @PutMapping("/{bookingId}/complete")
+    @RequestMapping(value = "/{bookingId}/complete", method = {RequestMethod.PUT, RequestMethod.POST})
     public ResponseEntity<ApiResponse<BookingResponse>>
     completeBooking(
             @PathVariable UUID bookingId,

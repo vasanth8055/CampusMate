@@ -13,6 +13,13 @@ public class CollegeMapper {
                 .id(college.getId())
                 .name(college.getName())
                 .shortName(college.getShortName())
+                .emailDomain(college.getEmailDomain())
+                .address(college.getAddress())
+                .city(college.getCity())
+                .state(college.getState())
+                .country(college.getCountry())
+                .latitude(college.getLatitude())
+                .longitude(college.getLongitude())
                 .build();
     }
 }

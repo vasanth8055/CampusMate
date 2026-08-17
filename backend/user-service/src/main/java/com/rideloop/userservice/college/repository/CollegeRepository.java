@@ -13,5 +13,14 @@ public interface CollegeRepository
     Optional<College> findByEmailDomainAndActiveTrue(
             String emailDomain
     );
+
+    Optional<College> findByEmailDomain(
+            String emailDomain
+    );
+
+    Optional<College> findByShortName(
+            String shortName
+    );
+
     List<College> findByActiveTrue();
 }

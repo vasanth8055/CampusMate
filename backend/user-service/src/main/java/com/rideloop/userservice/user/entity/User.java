@@ -47,6 +47,15 @@ public class User {
     @Builder.Default
     private boolean collegeVerified = false;
 
+    @Column(length = 255)
+    private String homeAddress;
+
+    @Column
+    private Double homeLatitude;
+
+    @Column
+    private Double homeLongitude;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
@@ -74,9 +83,6 @@ public class User {
         if (status == null) {
             status = UserStatus.PENDING_VERIFICATION;
         }
-
-        emailVerified = false;
-        collegeVerified = false;
     }
 
     @PreUpdate

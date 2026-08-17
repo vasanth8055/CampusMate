@@ -61,7 +61,7 @@ public class BookingEventConsumer {
                             event
                     );
 
-            case BOOKING_CANCELLED ->
+            case BOOKING_CANCELLED -> {
                     create(
                             event.driverId(),
                             NotificationType.BOOKING_CANCELLED,
@@ -69,6 +69,14 @@ public class BookingEventConsumer {
                             "A rider cancelled their booking.",
                             event
                     );
+                    create(
+                            event.riderId(),
+                            NotificationType.BOOKING_CANCELLED,
+                            "Booking cancelled",
+                            "The booking or ride has been cancelled.",
+                            event
+                    );
+            }
 
             case BOOKING_CONFIRMED ->
                     create(

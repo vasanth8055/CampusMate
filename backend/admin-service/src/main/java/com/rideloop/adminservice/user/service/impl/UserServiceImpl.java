@@ -15,6 +15,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserServiceClient userServiceClient;
     private final AuditLogger auditLogger;
+
     @Override
     public List<UserResponse> getUsers() {
         return userServiceClient.getUsers().getData();
@@ -34,6 +35,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void unblockUser(UUID userId) {
         userServiceClient.unblockUser(userId);
-        userServiceClient.unblockUser(userId);
+        auditLogger.log("Unblocked user: " + userId);
+    }
+
+    @Override
+    public void resetPassword(UUID userId, String newPassword) {
+        userServiceClient.resetPassword(userId, newPassword);
+        auditLogger.log("Reset password for user: " + userId);
     }
 }

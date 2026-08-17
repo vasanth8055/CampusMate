@@ -18,9 +18,9 @@ public class OpenApiConfig {
 
         return new OpenAPI()
                 .info(new Info()
-                        .title("RideLoop Admin Service API")
+                        .title("CampusMate Admin Service API")
                         .version("1.0")
-                        .description("RideLoop Admin APIs"))
+                        .description("CampusMate Admin APIs"))
                 .addSecurityItem(
                         new SecurityRequirement()
                                 .addList(securitySchemeName)

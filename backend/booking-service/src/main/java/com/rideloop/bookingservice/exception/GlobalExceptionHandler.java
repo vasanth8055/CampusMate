@@ -82,17 +82,37 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(FeignException.Conflict.class)
+    public ResponseEntity<ApiResponse<Void>>
+    handleFeignConflict(
+            FeignException.Conflict exception) {
+
+        String message = extractErrorMessage(
+                exception,
+                "Not enough seats available"
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(
+                        ApiResponse.failure(message)
+                );
+    }
+
     @ExceptionHandler(FeignException.NotFound.class)
     public ResponseEntity<ApiResponse<Void>>
     handleFeignNotFound(
             FeignException.NotFound exception) {
 
+        String message = extractErrorMessage(
+                exception,
+                "Trip not found"
+        );
+
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(
-                        ApiResponse.failure(
-                                "Trip not found"
-                        )
+                        ApiResponse.failure(message)
                 );
     }
 
@@ -101,12 +121,15 @@ public class GlobalExceptionHandler {
     handleFeignBadRequest(
             FeignException.BadRequest exception) {
 
+        String message = extractErrorMessage(
+                exception,
+                "Trip request could not be processed"
+        );
+
         return ResponseEntity
                 .badRequest()
                 .body(
-                        ApiResponse.failure(
-                                "Trip request could not be processed"
-                        )
+                        ApiResponse.failure(message)
                 );
     }
 
@@ -115,12 +138,25 @@ public class GlobalExceptionHandler {
     handleFeignException(
             FeignException exception) {
 
+        if (exception.status() == 409) {
+            String message = extractErrorMessage(
+                    exception,
+                    "Not enough seats available"
+            );
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.failure(message));
+        }
+
+        String message = extractErrorMessage(
+                exception,
+                "Trip Service is currently unavailable or rejected the request"
+        );
+
         return ResponseEntity
                 .status(HttpStatus.BAD_GATEWAY)
                 .body(
-                        ApiResponse.failure(
-                                "Trip Service is currently unavailable or rejected the request"
-                        )
+                        ApiResponse.failure(message)
                 );
     }
 
@@ -134,8 +170,24 @@ public class GlobalExceptionHandler {
                 )
                 .body(
                         ApiResponse.failure(
-                                "An unexpected error occurred"
+                                "An unexpected error occurred: " + exception.getMessage()
                         )
                 );
+    }
+
+    private String extractErrorMessage(FeignException exception, String fallback) {
+        try {
+            String content = exception.contentUTF8();
+            if (content != null && !content.isBlank()) {
+                com.fasterxml.jackson.databind.ObjectMapper mapper =
+                        new com.fasterxml.jackson.databind.ObjectMapper();
+                com.fasterxml.jackson.databind.JsonNode node = mapper.readTree(content);
+                if (node.has("message") && !node.get("message").isNull()) {
+                    return node.get("message").asText();
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return fallback;
     }
 }

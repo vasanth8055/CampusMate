@@ -31,6 +31,8 @@ eureka:
   client:
     service-url:
       defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
 
 springdoc:
   swagger-ui:
@@ -40,6 +42,11 @@ springdoc:
 
 jwt:
   secret: c2VjdXJlLWJhc2U2NC1lbmNvZGVkLWtleS1mb3ItcmlkZWxvb3AtMjU2LWJpdHMtMTIzNDU2Nzg5MA==
+
+user:
+  service:
+    url: ${USER_SERVICE_URL:http://user-service:8081}
+
 
 management:
   endpoints:

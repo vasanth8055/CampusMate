@@ -12,8 +12,16 @@ public record MatchRequest(
         @NotBlank
         String source,
 
+        Double sourceLatitude,
+
+        Double sourceLongitude,
+
         @NotBlank
         String destination,
+
+        Double destinationLatitude,
+
+        Double destinationLongitude,
 
         @NotNull
         @Future

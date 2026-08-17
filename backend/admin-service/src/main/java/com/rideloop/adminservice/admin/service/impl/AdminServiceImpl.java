@@ -39,7 +39,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void rejectDriver(UUID driverId) {
-        userServiceClient.rejectDriver(driverId);
+        userServiceClient.rejectDriver(driverId, null);
+    }
+
+    @Override
+    public void rejectDriver(UUID driverId, String reason) {
+        userServiceClient.rejectDriver(driverId, reason);
     }
 
     // ---------------- User ----------------

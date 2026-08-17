@@ -48,11 +48,21 @@ public class CollegeController {
     }
     @PostMapping("/verify-otp")
     public ResponseEntity<ApiResponse<Void>> verifyCollegeOtp(
+            @org.springframework.security.core.annotation.AuthenticationPrincipal
+            com.rideloop.sharedkernel.security.AuthenticatedUser user,
             Authentication authentication,
             @Valid @RequestBody VerifyCollegeOtpRequest request) {
 
+        String identifier = (user != null && user.getEmail() != null && !user.getEmail().isBlank()) ? user.getEmail()
+                : (user != null && user.getUserId() != null) ? user.getUserId().toString()
+                : (authentication != null ? authentication.getName() : null);
+
+        if (identifier == null || identifier.isBlank()) {
+            throw new IllegalStateException("Unauthenticated user");
+        }
+
         collegeService.verifyCollegeOtp(
-                authentication.getName(),
+                identifier,
                 request.getCollegeEmail(),
                 request.getOtp()
         );

@@ -1,5 +1,6 @@
 package com.rideloop.userservice.security;
 
+import com.rideloop.sharedkernel.security.AuthenticatedUser;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,10 +32,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         System.out.println("===== JWT FILTER =====");
 
         String authHeader = request.getHeader("Authorization");
+
+        System.out.println("Request : "
+                + request.getMethod()
+                + " "
+                + request.getRequestURI());
+
         System.out.println("Header : " + authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+
             System.out.println("No Bearer Token");
+
             filterChain.doFilter(request, response);
             return;
         }
@@ -43,45 +52,86 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String jwt = authHeader.substring(7);
 
-            System.out.println("JWT : " + jwt);
-
             String email = jwtService.extractUsername(jwt);
 
             System.out.println("Email : " + email);
 
             if (email != null &&
-                    SecurityContextHolder.getContext().getAuthentication() == null) {
+                    SecurityContextHolder
+                            .getContext()
+                            .getAuthentication() == null) {
 
                 UserDetails userDetails =
                         userDetailsService.loadUserByUsername(email);
 
-                System.out.println("User Loaded : " + userDetails.getUsername());
+                System.out.println(
+                        "User Loaded : "
+                                + userDetails.getUsername()
+                );
 
                 boolean valid =
-                        jwtService.isTokenValid(jwt, userDetails.getUsername());
+                        jwtService.isTokenValid(
+                                jwt,
+                                userDetails.getUsername()
+                        );
 
                 System.out.println("Token Valid : " + valid);
 
                 if (valid) {
 
+                    CustomUserPrincipal principal =
+                            (CustomUserPrincipal) userDetails;
+
+                    AuthenticatedUser authenticatedUser =
+                            new AuthenticatedUser(
+                                    principal.getId(),
+                                    principal.getEmail(),
+                                    principal.getRole()
+                            );
+
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(
-                                    userDetails,
+                                    authenticatedUser,
                                     null,
-                                    userDetails.getAuthorities());
+                                    principal.getAuthorities()
+                            );
 
                     authentication.setDetails(
                             new WebAuthenticationDetailsSource()
-                                    .buildDetails(request));
+                                    .buildDetails(request)
+                    );
 
-                    SecurityContextHolder.getContext()
+                    SecurityContextHolder
+                            .getContext()
                             .setAuthentication(authentication);
 
-                    System.out.println("Authentication Stored");
+                    System.out.println(
+                            "Authentication Stored"
+                    );
+
+                    System.out.println(
+                            "Authenticated User ID : "
+                                    + authenticatedUser.getUserId()
+                    );
+
+                    System.out.println(
+                            "Authenticated User Email : "
+                                    + authenticatedUser.getEmail()
+                    );
+
+                    System.out.println(
+                            "Authenticated User Role : "
+                                    + authenticatedUser.getRole()
+                    );
                 }
             }
 
         } catch (Exception e) {
+
+            System.out.println(
+                    "JWT authentication failed."
+            );
+
             e.printStackTrace();
         }
 

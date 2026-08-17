@@ -44,5 +44,6 @@ public interface UserService {
             String otp,
             String newPassword
     );
+    void adminResetPassword(UUID userId, String newPassword);
     AuthResponse refreshToken(String refreshToken);
 }

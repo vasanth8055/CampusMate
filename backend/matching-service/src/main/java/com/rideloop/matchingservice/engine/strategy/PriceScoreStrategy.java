@@ -14,6 +14,16 @@ public class PriceScoreStrategy
             TripResponse trip,
             MatchRequest request) {
 
-        return MatchWeight.PRICE * 100;
+        if (trip.price() == null) {
+            return MatchWeight.PRICE * 100;
+        }
+
+        double price = trip.price().doubleValue();
+        if (price <= 0) {
+            return MatchWeight.PRICE * 100;
+        }
+
+        double normalized = Math.max(0.2, 1.0 - (price / 200.0));
+        return Math.round(normalized * MatchWeight.PRICE * 100.0 * 100.0) / 100.0;
     }
 }

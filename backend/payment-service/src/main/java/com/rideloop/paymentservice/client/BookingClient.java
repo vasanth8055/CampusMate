@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name = "booking-service")
+@FeignClient(name = "booking-service", url = "${booking.service.url:http://localhost:8083}")
 public interface BookingClient {
+
 
     @GetMapping("/api/v1/bookings/{bookingId}")
     ApiResponse<BookingInfoResponse> getBooking(
