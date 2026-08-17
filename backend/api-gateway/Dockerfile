@@ -1,8 +1,13 @@
-FROM eclipse-temurin:21-jre
+FROM maven:3.9.9-eclipse-temurin-21 AS build
+WORKDIR /workspace
 
+COPY . .
+RUN mvn -pl api-gateway -am clean package -DskipTests
+
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-COPY target/api-gateway-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /workspace/api-gateway/target/*.jar app.jar
 
 EXPOSE 8080
 
