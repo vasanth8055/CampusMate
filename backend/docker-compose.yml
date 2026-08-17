@@ -124,6 +124,15 @@ services:
     depends_on:
       - prometheus
 
+  mailhog:
+    image: mailhog/mailhog
+    container_name: rideloop-mailhog
+    restart: unless-stopped
+
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
   eureka-server:
     build:
       context: ./eureka-server
@@ -213,8 +222,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
 
-      MAIL_HOST: ${MAIL_HOST}
-      MAIL_PORT: ${MAIL_PORT}
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
 
