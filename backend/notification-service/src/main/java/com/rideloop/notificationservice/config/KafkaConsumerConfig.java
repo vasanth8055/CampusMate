@@ -1,6 +1,8 @@
 package com.rideloop.notificationservice.config;
 
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,8 +22,17 @@ public class KafkaConsumerConfig {
 
     private static final String GROUP_ID = "notification-service";
 
-    @Value("${spring.kafka.bootstrap-servers}")
+    @Value("${spring.kafka.bootstrap-servers:localhost:9092}")
     private String bootstrapServers;
+
+    @Value("${spring.kafka.properties.security.protocol:${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}}")
+    private String securityProtocol;
+
+    @Value("${spring.kafka.properties.sasl.mechanism:${KAFKA_SASL_MECHANISM:PLAIN}}")
+    private String saslMechanism;
+
+    @Value("${spring.kafka.properties.sasl.jaas.config:${KAFKA_SASL_JAAS_CONFIG:}}")
+    private String saslJaasConfig;
 
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
@@ -67,6 +78,16 @@ public class KafkaConsumerConfig {
                 JsonDeserializer.VALUE_DEFAULT_TYPE,
                 Object.class
         );
+
+        if (securityProtocol != null && !securityProtocol.isBlank() && !"PLAINTEXT".equalsIgnoreCase(securityProtocol)) {
+            props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, securityProtocol);
+            if (saslMechanism != null && !saslMechanism.isBlank()) {
+                props.put(SaslConfigs.SASL_MECHANISM, saslMechanism);
+            }
+            if (saslJaasConfig != null && !saslJaasConfig.isBlank()) {
+                props.put(SaslConfigs.SASL_JAAS_CONFIG, saslJaasConfig);
+            }
+        }
 
         return new DefaultKafkaConsumerFactory<>(props);
     }
