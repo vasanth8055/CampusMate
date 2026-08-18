@@ -12,7 +12,7 @@ public class KafkaTopicConfig {
     public NewTopic bookingEventsTopic() {
 
         return TopicBuilder
-                .name("rideloop.booking.events")
+                .name("booking-events")
                 .partitions(3)
                 .replicas(1)
                 .build();

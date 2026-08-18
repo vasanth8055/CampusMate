@@ -19,7 +19,7 @@ public class BookingEventConsumer {
     private final NotificationRepository notificationRepository;
 
     @KafkaListener(
-            topics = "rideloop.booking.events",
+            topics = "booking-events",
             groupId = "notification-service"
     )
     public void consume(BookingEvent event) {

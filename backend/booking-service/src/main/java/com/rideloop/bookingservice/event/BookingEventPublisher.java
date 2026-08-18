@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class BookingEventPublisher {
 
     public static final String BOOKING_EVENTS_TOPIC =
-            "rideloop.booking.events";
+            "booking-events";
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
