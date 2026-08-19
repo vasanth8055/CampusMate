@@ -8,8 +8,14 @@ server:
     include-exception: true
 
 storage:
+  type: ${STORAGE_TYPE:local}
   local:
     upload-path: uploads/licenses
+  supabase:
+    url: ${SUPABASE_URL:}
+    service-role-key: ${SUPABASE_SERVICE_ROLE_KEY:}
+    bucket: ${SUPABASE_LICENSE_BUCKET:licenses}
+    signed-url-ttl-seconds: ${SUPABASE_SIGNED_URL_TTL:3600}
 
 spring:
   servlet:
@@ -28,6 +34,16 @@ spring:
     url: ${DB_URL:jdbc:postgresql://postgres:5432/users_db?options=-c%20TimeZone=Asia/Kolkata}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 2
+      minimum-idle: 1
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      data-source-properties:
+        connectTimeout: 10
+        socketTimeout: 30
+        tcpKeepAlive: true
 
   jpa:
     open-in-view: false
