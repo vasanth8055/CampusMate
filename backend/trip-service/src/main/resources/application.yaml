@@ -12,6 +12,10 @@ spring:
       connection-timeout: 30000
       idle-timeout: 600000
       max-lifetime: 1800000
+      data-source-properties:
+        connectTimeout: 10
+        socketTimeout: 30
+        tcpKeepAlive: true
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -44,6 +48,8 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+    eureka-server-connect-timeout-seconds: 5
+    eureka-server-read-timeout-seconds: 5
 
 springdoc:
 
