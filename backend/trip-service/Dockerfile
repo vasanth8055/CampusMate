@@ -3,12 +3,12 @@ WORKDIR /workspace
 
 COPY . .
 
-RUN cd backend && mvn -pl trip-service -am clean package -DskipTests
+RUN mvn -pl trip-service -am clean package -DskipTests
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-COPY --from=build /workspace/backend/trip-service/target/*.jar app.jar
+COPY --from=build /workspace/trip-service/target/*.jar app.jar
 
 EXPOSE 8082
 

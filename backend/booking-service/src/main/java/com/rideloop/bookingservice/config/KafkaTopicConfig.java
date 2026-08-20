@@ -23,7 +23,7 @@ public class KafkaTopicConfig {
         return TopicBuilder
                 .name("booking-events")
                 .partitions(3)
-                .replicas(1)
+                .replicas(3)
                 .build();
     }
 
@@ -32,7 +32,7 @@ public class KafkaTopicConfig {
         return TopicBuilder
                 .name("trip-events")
                 .partitions(3)
-                .replicas(1)
+                .replicas(3)
                 .build();
     }
 }

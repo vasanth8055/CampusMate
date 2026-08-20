@@ -23,7 +23,7 @@ public class KafkaTopicConfig {
         return TopicBuilder
                 .name("trip-events")
                 .partitions(3)
-                .replicas(1)
+                .replicas(3)
                 .build();
     }
 }
