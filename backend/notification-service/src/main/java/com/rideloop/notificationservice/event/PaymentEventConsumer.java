@@ -7,10 +7,12 @@ import com.rideloop.notificationservice.entity.enums.NotificationType;
 import com.rideloop.notificationservice.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(name = "kafka.listener.payment.enabled", havingValue = "true", matchIfMissing = false)
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentEventConsumer {

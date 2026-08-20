@@ -1,10 +1,8 @@
 package com.rideloop.notificationservice.config;
 
-import org.apache.kafka.clients.CommonClientConfigs;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -18,31 +16,16 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
+@RequiredArgsConstructor
 public class KafkaConsumerConfig {
 
     private static final String GROUP_ID = "notification-service";
-
-    @Value("${spring.kafka.bootstrap-servers:localhost:9092}")
-    private String bootstrapServers;
-
-    @Value("${spring.kafka.properties.security.protocol:${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}}")
-    private String securityProtocol;
-
-    @Value("${spring.kafka.properties.sasl.mechanism:${KAFKA_SASL_MECHANISM:PLAIN}}")
-    private String saslMechanism;
-
-    @Value("${spring.kafka.properties.sasl.jaas.config:${KAFKA_SASL_JAAS_CONFIG:}}")
-    private String saslJaasConfig;
+    private final KafkaCommonConfig kafkaCommonConfig;
 
     @Bean
     public ConsumerFactory<String, Object> consumerFactory() {
 
-        Map<String, Object> props = new HashMap<>();
-
-        props.put(
-                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                bootstrapServers
-        );
+        Map<String, Object> props = new HashMap<>(kafkaCommonConfig.getCommonConfigs());
 
         props.put(
                 ConsumerConfig.GROUP_ID_CONFIG,
@@ -52,6 +35,11 @@ public class KafkaConsumerConfig {
         props.put(
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
                 "earliest"
+        );
+
+        props.put(
+                ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG,
+                false
         );
 
         props.put(
@@ -78,16 +66,6 @@ public class KafkaConsumerConfig {
                 JsonDeserializer.VALUE_DEFAULT_TYPE,
                 Object.class
         );
-
-        if (securityProtocol != null && !securityProtocol.isBlank() && !"PLAINTEXT".equalsIgnoreCase(securityProtocol)) {
-            props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, securityProtocol);
-            if (saslMechanism != null && !saslMechanism.isBlank()) {
-                props.put(SaslConfigs.SASL_MECHANISM, saslMechanism);
-            }
-            if (saslJaasConfig != null && !saslJaasConfig.isBlank()) {
-                props.put(SaslConfigs.SASL_JAAS_CONFIG, saslJaasConfig);
-            }
-        }
 
         return new DefaultKafkaConsumerFactory<>(props);
     }

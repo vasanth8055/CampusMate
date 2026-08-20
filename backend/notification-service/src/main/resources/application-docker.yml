@@ -9,8 +9,19 @@ spring:
     url: ${DB_URL:jdbc:postgresql://postgres:5432/notifications_db}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 2
+      minimum-idle: 1
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      data-source-properties:
+        connectTimeout: 10
+        socketTimeout: 30
+        tcpKeepAlive: true
 
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
     hibernate:
       ddl-auto: update
@@ -39,16 +50,24 @@ spring:
       properties:
         spring.json.trusted.packages: "*"
         spring.json.use.type.headers: true
+        allow.auto.create.topics: false
 
 eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_SERVER_URL:http://eureka-server:8761/eureka/}
+    eureka-server-connect-timeout-seconds: 5
+    eureka-server-read-timeout-seconds: 5
   instance:
     prefer-ip-address: true
 
 jwt:
   secret: ${JWT_SECRET}
+
+kafka:
+  listener:
+    payment:
+      enabled: false
 
 springdoc:
   swagger-ui:
