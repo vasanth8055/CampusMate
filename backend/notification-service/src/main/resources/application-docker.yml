@@ -50,12 +50,17 @@ spring:
 
 eureka:
   client:
+    register-with-eureka: true
+    fetch-registry: false
     service-url:
       defaultZone: ${EUREKA_SERVER_URL:http://eureka-server:8761/eureka/}
     eureka-server-connect-timeout-seconds: 5
     eureka-server-read-timeout-seconds: 5
   instance:
+    instance-id: ${EUREKA_INSTANCE_ID:${spring.application.name}:${server.port}}
     prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
 
 jwt:
   secret: ${JWT_SECRET}
