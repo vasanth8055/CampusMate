@@ -43,6 +43,8 @@ server:
 
 eureka:
   client:
+    register-with-eureka: true
+    fetch-registry: false
     service-url:
       defaultZone: ${EUREKA_SERVER_URL:http://eureka-server:8761/eureka/}
     eureka-server-connect-timeout-seconds: 5
