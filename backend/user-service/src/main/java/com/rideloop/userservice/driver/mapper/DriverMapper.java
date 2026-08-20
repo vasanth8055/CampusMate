@@ -2,6 +2,7 @@ package com.rideloop.userservice.driver.mapper;
 
 import com.rideloop.userservice.driver.dto.response.DriverResponse;
 import com.rideloop.userservice.driver.entity.DriverProfile;
+import com.rideloop.userservice.driver.storage.StorageService;
 import com.rideloop.userservice.driver.vehicle.mapper.VehicleMapper;
 import com.rideloop.userservice.driver.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ public class DriverMapper {
 
     private final VehicleRepository vehicleRepository;
     private final VehicleMapper vehicleMapper;
+    private final StorageService storageService;
 
     public DriverResponse toResponse(DriverProfile driver) {
         var user = driver.getUser();
@@ -20,6 +22,10 @@ public class DriverMapper {
         var vehicleOpt = vehicleRepository.findByDriverAndStatus(driver, com.rideloop.userservice.driver.vehicle.entity.enums.VehicleStatus.ACTIVE)
                 .or(() -> vehicleRepository.findAllByDriver(driver).stream().findFirst());
         var vehicleResponse = vehicleOpt.map(vehicleMapper::toResponse).orElse(null);
+
+        String resolvedLicenseUrl = driver.getLicenseImageUrl() != null && !driver.getLicenseImageUrl().isBlank()
+                ? storageService.getSignedUrl(driver.getLicenseImageUrl())
+                : null;
 
         return DriverResponse.builder()
                 .driverId(driver.getId())
@@ -30,7 +36,7 @@ public class DriverMapper {
                 .phoneNumber(user != null ? user.getPhoneNumber() : null)
                 .collegeVerified(user != null && user.isCollegeVerified())
                 .drivingLicenseNumber(driver.getDrivingLicenseNumber())
-                .licenseImageUrl(driver.getLicenseImageUrl())
+                .licenseImageUrl(resolvedLicenseUrl)
                 .status(driver.getStatus())
                 .rejectionReason(driver.getRejectionReason())
                 .vehicle(vehicleResponse)

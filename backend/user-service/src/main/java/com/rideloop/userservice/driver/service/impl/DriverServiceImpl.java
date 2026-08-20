@@ -15,6 +15,7 @@ import com.rideloop.userservice.user.entity.enums.UserStatus;
 import com.rideloop.userservice.common.exception.ResourceNotFoundException;
 import com.rideloop.userservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DriverServiceImpl implements DriverService {
 
     private final DriverProfileRepository driverRepository;
@@ -120,15 +122,24 @@ public class DriverServiceImpl implements DriverService {
                         )
                 );
 
-        String imageUrl = storageService.store(file);
+        String oldLicensePath = driver.getLicenseImageUrl();
 
-        driver.setLicenseImageUrl(imageUrl);
+        // Upload the new license file first
+        String newStoragePath = storageService.store(file, user.getId().toString());
 
-        driver.setStatus(
-                DriverStatus.LICENSE_UPLOADED
-        );
-
+        // Update and persist the new reference in database
+        driver.setLicenseImageUrl(newStoragePath);
+        driver.setStatus(DriverStatus.LICENSE_UPLOADED);
         driverRepository.save(driver);
+
+        // Only after database persistence succeeds, delete the previous license object
+        if (oldLicensePath != null && !oldLicensePath.isBlank() && !oldLicensePath.equals(newStoragePath)) {
+            try {
+                storageService.delete(oldLicensePath);
+            } catch (Exception ex) {
+                log.warn("Failed to delete previous license file {}: {}", oldLicensePath, ex.getMessage());
+            }
+        }
     }
 
     @Override

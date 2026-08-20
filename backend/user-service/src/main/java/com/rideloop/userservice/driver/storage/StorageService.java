@@ -8,4 +8,16 @@ public interface StorageService {
             MultipartFile file
     );
 
+    String store(
+            MultipartFile file,
+            String subDirectory
+    );
+
+    String getSignedUrl(
+            String storagePath
+    );
+
+    void delete(
+            String storagePath
+    );
 }
