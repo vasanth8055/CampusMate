@@ -9,6 +9,12 @@ spring:
     url: ${DB_URL:jdbc:postgresql://postgres:5432/tracking_db}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 2
+      minimum-idle: 0
+      connection-timeout: 30000
+      idle-timeout: 60000
+      max-lifetime: 300000
 
   jpa:
     open-in-view: false
